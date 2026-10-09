@@ -1,0 +1,79 @@
+
+# ============================================================
+# Python environments and caches
+# ============================================================
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ============================================================
+# Environment variables and secrets
+# ============================================================
+.env
+.env.*
+!.env.example
+
+# ============================================================
+# IDE and operating system
+# ============================================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# Large MIDV-500 source dataset
+# Do not upload the benchmark dataset to GitHub
+# ============================================================
+data_generation/synthetic_documents/source/
+
+# ============================================================
+# Generated document images
+# ============================================================
+data_generation/synthetic_documents/normal/*
+data_generation/synthetic_documents/tampered/*
+data_generation/synthetic_documents/image_previews/
+data_generation/synthetic_documents/ela_previews/
+
+# ============================================================
+# Generated batch outputs
+# These are not needed by the live upload workflow
+# ============================================================
+data_generation/synthetic_documents/document_metadata.csv
+data_generation/synthetic_documents/ocr_results.csv
+data_generation/synthetic_documents/tamper_metadata.csv
+
+# Keep the calibrated ELA evaluation file.
+# The live workflow reads its threshold.
+!data_generation/synthetic_documents/ela_evaluation.csv
+
+# ============================================================
+# Evaluation outputs
+# ============================================================
+evaluation/decision_evaluation_results.csv
+
+# ============================================================
+# Logs and generated model artifacts
+# ============================================================
+audit/logs/
+*.log
+*.joblib
+*.pkl
+*.pickle
+
+# ============================================================
+# Local dependency diagnostics and backups
+# ============================================================
+installed-packages.txt
+requirements.backup.txt
+
+# ============================================================
+# Keep placeholder folders
+# ============================================================
+!data_generation/synthetic_documents/normal/.gitkeep
+!data_generation/synthetic_documents/tampered/.gitkeep

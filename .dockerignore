@@ -1,0 +1,44 @@
+﻿# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Git and editor files
+.git/
+.vscode/
+.idea/
+
+# Environment variables and local diagnostics
+.env
+.env.*
+installed-packages.txt
+requirements.backup.txt
+
+# Large MIDV-500 benchmark dataset
+data_generation/synthetic_documents/source/
+
+# Generated document images and previews
+data_generation/synthetic_documents/normal/
+data_generation/synthetic_documents/tampered/
+data_generation/synthetic_documents/image_previews/
+data_generation/synthetic_documents/ela_previews/
+
+# Generated batch outputs not required by the live upload workflow
+data_generation/synthetic_documents/document_metadata.csv
+data_generation/synthetic_documents/ocr_results.csv
+data_generation/synthetic_documents/tamper_metadata.csv
+
+# Logs and generated model artifacts
+audit/logs/
+*.log
+*.joblib
+*.pkl
+*.pickle
+
+# Evaluation outputs
+evaluation/decision_evaluation_results.csv

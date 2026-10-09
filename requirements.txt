@@ -1,0 +1,36 @@
+
+# Core data processing
+pandas
+numpy
+Pillow
+opencv-python-headless
+scikit-learn
+pydantic
+
+# API
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Web interface
+streamlit
+
+# Workflow orchestration
+langgraph
+langchain-core
+
+# Database and audit logging
+psycopg[binary]
+
+# MCP server and sanctions data downloads
+mcp
+requests
+
+# OCR
+pytesseract
+
+# Synthetic data generation
+Faker
+
+# Testing
+pytest
