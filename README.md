@@ -17,7 +17,7 @@ A multi-agent compliance review system that combines document intelligence, sanc
 
 </div>
 
-> **Project status:** Educational and portfolio project built on **synthetic data**. It is **not** intended for real-world financial compliance decisions.
+> **Project status:** Educational and portfolio project built on synthetic data. It is not intended for real-world financial compliance decisions.
 
 ---
 
@@ -25,7 +25,9 @@ A multi-agent compliance review system that combines document intelligence, sanc
 
 - [Overview](#-overview)
 - [Key Features](#-key-features)
+- [Live Deployment](#-live-deployment)
 - [Architecture](#-architecture)
+- [Workflow](#-workflow)
 - [Technology Stack](#-technology-stack)
 - [Project Structure](#-project-structure)
 - [Installation and Setup](#-installation-and-setup)
@@ -41,18 +43,11 @@ A multi-agent compliance review system that combines document intelligence, sanc
 
 ## 🔎 Overview
 
-ComplyAgent demonstrates how computer vision, machine learning, workflow orchestration, API development, and audit logging can work together in a single, explainable compliance workflow.
+ComplyAgent demonstrates how computer vision, machine learning, workflow orchestration, API development, and audit logging can work together in a single compliance workflow.
 
-A reviewer selects a case, uploads an identity document, and ComplyAgent runs the complete pipeline. The output is a decision of **APPROVE**, **REVIEW**, or **REJECT**, supported by the evidence behind it: OCR results, tamper indicators, sanctions screening, risk scores, triggered rules, and a complete audit trace.
+A reviewer selects a case, uploads an identity document, and ComplyAgent runs the compliance analysis pipeline. The output is a decision of **APPROVE**, **REVIEW**, or **REJECT**, supported by evidence such as OCR results, tamper indicators, sanctions screening, risk scores, triggered rules, and an audit trace.
 
-The system is designed to **support human review, not replace compliance professionals.**
-
-<!--
-Add screenshots after saving them in docs/screenshots/, then uncomment:
-
-![Reviewer dashboard](docs/screenshots/dashboard.png)
-![Final verdict](docs/screenshots/verdict.png)
--->
+The system is designed to support human review, not replace compliance professionals.
 
 ---
 
@@ -60,16 +55,42 @@ Add screenshots after saving them in docs/screenshots/, then uncomment:
 
 | Capability | Description |
 |---|---|
-| **Document Verification** | Processes uploaded identity documents (JPG, JPEG, PNG, TIF, TIFF). |
+| **Document Verification** | Processes uploaded identity documents in supported image formats. |
 | **OCR Extraction** | Extracts text and confidence scores using Tesseract OCR. |
-| **Tamper Detection** | Applies Error Level Analysis (ELA) to flag potential image manipulation. |
-| **Sanctions Screening** | Screens identities against sanctions data sources and reports match score and reason. |
-| **Risk Assessment** | Combines a machine-learning risk scorer with a deterministic rules engine. |
-| **Transaction Analysis** | Detects suspicious patterns such as structuring, rapid movement, and high-risk jurisdictions. |
-| **Workflow Orchestration** | Coordinates all agents with LangGraph. |
-| **REST API** | Exposes the workflow through FastAPI endpoints. |
-| **Reviewer Dashboard** | Interactive Streamlit console with a verdict, evidence workbench, and audit view. |
-| **Audit Logging** | Persists a complete evidence trace to JSONL and PostgreSQL. |
+| **Tamper Detection** | Uses Error Level Analysis (ELA) to flag potential image manipulation. |
+| **Sanctions Screening** | Screens identities against configured sanctions data and evaluates potential matches. |
+| **Risk Assessment** | Combines machine-learning risk scoring with a deterministic rules engine. |
+| **Transaction Analysis** | Evaluates suspicious transaction patterns and risk indicators. |
+| **Multi-Agent Workflow** | Coordinates document, screening, risk, and decision agents using LangGraph. |
+| **REST API** | Exposes compliance functionality through FastAPI. |
+| **Reviewer Dashboard** | Provides a Streamlit interface for reviewing cases and results. |
+| **Audit Logging** | Records decision evidence and trace information for auditability. |
+
+---
+
+## 🌐 Live Deployment
+
+ComplyAgent is deployed on **Render** using separate services for the FastAPI backend and Streamlit reviewer dashboard.
+
+| Component | Link |
+|---|---|
+| **Live Reviewer Dashboard** | [Open ComplyAgent Dashboard](https://complyagent-dashboard.onrender.com) |
+| **API Base URL** | [ComplyAgent API](https://complyagent-w8hs.onrender.com) |
+| **Interactive API Documentation** | [Swagger UI](https://complyagent-w8hs.onrender.com/docs) |
+| **API Health Check** | [Check API Health](https://complyagent-w8hs.onrender.com/health) |
+
+### Deployment Details
+
+- **Hosting platform:** Render
+- **Backend:** FastAPI REST API
+- **Containerization:** Docker
+- **Frontend:** Streamlit reviewer dashboard
+- **API documentation:** FastAPI Swagger UI
+- **Health endpoint:** `/health`
+
+The dashboard provides the user interface, while the API processes requests and returns compliance analysis results.
+
+> **Note:** Free hosting services may take time to start after inactivity. The deployed application is an educational prototype using synthetic data.
 
 ---
 
@@ -77,30 +98,86 @@ Add screenshots after saving them in docs/screenshots/, then uncomment:
 
 ```mermaid
 flowchart TD
-    A[Reviewer selects case and uploads document] --> B[Document Intake<br/>OCR + ELA]
-    B --> C[Document Agent]
-    C --> D[Screening Agent<br/>Sanctions check]
-    D --> E[Risk Agent]
-    E --> E1[Rules engine]
-    E --> E2[ML risk model]
-    E --> E3[Transaction patterns]
-    E1 --> F[Decision Agent]
-    E2 --> F
-    E3 --> F
-    F --> G[Audit Trace]
-    G --> H[(JSONL log)]
-    G --> I[(PostgreSQL)]
+    A[Reviewer] --> B[Streamlit Dashboard]
+    B --> C[FastAPI Backend]
+    C --> D[Document Intake]
+    D --> E[Document Agent]
+    E --> F[Screening Agent]
+    F --> G[Risk Agent]
+    G --> H[Decision Agent]
+    H --> I[Audit Trace]
+    I --> J[JSONL Logs]
+    I --> K[(PostgreSQL)]
+    H --> C
+    C --> B
 ```
 
-### Workflow
+### Agent Architecture
 
-1. **Document submission:** The reviewer uploads an identity document for the selected case.
-2. **OCR extraction:** Text and confidence are extracted from the document.
-3. **Document analysis:** ELA identifies potential tampering indicators.
-4. **Screening:** The identity is checked against sanctions data.
-5. **Risk assessment:** Rules, ML scoring, and transaction patterns are combined into an overall risk score and level.
-6. **Decision support:** The Decision Agent produces an outcome with reasoning and supporting evidence.
-7. **Auditability:** The full evidence trace is recorded for traceability.
+```mermaid
+flowchart TD
+    A[Document Agent] --> B[Screening Agent]
+    B --> C[Risk Agent]
+    C --> D[Decision Agent]
+    D --> E[Audit Logging]
+    C --> F[Rules Engine]
+    C --> G[ML Risk Model]
+    C --> H[Transaction Pattern Analysis]
+    F --> D
+    G --> D
+    H --> D
+```
+
+The workflow separates document analysis, identity screening, risk assessment, decision support, and audit logging into distinct components.
+
+---
+
+## 🔄 Workflow
+
+### Step 1: Case Selection and Document Upload
+
+The reviewer selects a customer case and submits an identity document through the Streamlit dashboard.
+
+### Step 2: Document Intake
+
+The uploaded image is processed using OpenCV and Tesseract OCR. The system extracts text, calculates OCR confidence, and evaluates the image using Error Level Analysis.
+
+### Step 3: Document Agent
+
+The Document Agent structures the extracted information into validated evidence, including OCR results, document-quality classification, and potential tampering indicators.
+
+### Step 4: Screening Agent
+
+The Screening Agent evaluates the supplied identity information against the configured sanctions data and records screening evidence.
+
+### Step 5: Risk Agent
+
+The Risk Agent combines multiple risk signals:
+
+- Machine-learning risk prediction
+- Deterministic rule evaluation
+- Transaction-pattern indicators
+- Sanctions-related risk information
+
+These signals contribute to an overall risk score and risk classification.
+
+### Step 6: Decision Agent
+
+The Decision Agent evaluates screening and risk evidence and produces one of three outcomes:
+
+- **APPROVE** — the configured rules permit approval.
+- **REVIEW** — further human assessment is required.
+- **REJECT** — the configured rules indicate rejection.
+
+These are prototype decision outcomes, not authoritative compliance determinations.
+
+### Step 7: Audit Trace
+
+The system assembles the available evidence, records the decision, and persists the audit trace through the configured logging system.
+
+### Step 8: Result Display
+
+The API returns the analysis results, and the reviewer dashboard presents the available decision, risk information, and supporting evidence.
 
 ---
 
@@ -108,19 +185,24 @@ flowchart TD
 
 | Technology | Purpose |
 |---|---|
-| Python 3.11 | Core programming language |
-| FastAPI | REST API development |
-| Streamlit | Reviewer interface |
-| LangGraph | Workflow orchestration |
-| Scikit-learn | Machine learning and risk scoring |
-| OpenCV | Image processing |
-| Pillow | Image handling |
-| Tesseract OCR | Document text extraction |
-| Pandas & NumPy | Data processing |
-| PostgreSQL | Database connectivity and audit storage |
-| MCP | Tool integration |
-| Docker | Containerization |
-| Pytest | Automated testing |
+| **Python 3.11** | Core programming language |
+| **FastAPI** | REST API and backend services |
+| **Streamlit** | Interactive reviewer dashboard |
+| **LangGraph** | Multi-agent workflow orchestration |
+| **Pydantic** | Data validation and structured agent contracts |
+| **Scikit-learn** | Machine-learning risk scoring |
+| **OpenCV** | Image processing and ELA preparation |
+| **Pillow** | Image handling |
+| **Tesseract OCR** | Text extraction from identity documents |
+| **Pandas** | Data loading, transformation, and analysis |
+| **NumPy** | Numerical computation |
+| **PostgreSQL** | Relational database and audit storage integration |
+| **JSONL** | Structured audit-trace logging |
+| **MCP** | Tool integration |
+| **Docker** | Containerization and deployment |
+| **Pytest** | Automated testing |
+| **Render** | Cloud hosting for the API and dashboard |
+| **Git & GitHub** | Version control and source-code hosting |
 
 ---
 
@@ -129,22 +211,23 @@ flowchart TD
 ```text
 ComplyAgent/
 ├── agents/                 # Document, screening, risk, and decision agents
-├── api/                    # FastAPI application
-├── audit/                  # Audit logging
+├── api/                    # FastAPI application and endpoints
+├── audit/                  # Audit-trace creation and persistence
 ├── console/                # Streamlit reviewer dashboard
-├── data_generation/        # Synthetic data and utilities
-├── docs/                   # Architecture and ethics documentation
+├── data_generation/        # Synthetic data and document utilities
+├── docker/                 # Additional Docker-related resources
+├── docs/                   # Project documentation
 ├── evaluation/             # Model evaluation scripts
 ├── mcp_server/             # MCP server and tools
 ├── orchestration/          # LangGraph workflow
 ├── risk_model/             # Risk scoring and rules engine
 ├── tests/                  # Automated tests
 ├── vision/                 # OCR and tampering analysis
-├── Dockerfile
-├── .dockerignore
-├── .gitignore
-├── requirements.txt
-└── README.md
+├── Dockerfile              # API container configuration
+├── .dockerignore           # Docker build exclusions
+├── .gitignore              # Git exclusions
+├── requirements.txt        # Python dependencies
+└── README.md               # Project documentation
 ```
 
 ---
@@ -156,16 +239,16 @@ ComplyAgent/
 - Python 3.11
 - Git
 - [Tesseract OCR](https://github.com/tesseract-ocr/tesseract)
-- Docker Desktop (optional, for containerized execution)
+- Docker Desktop (optional)
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/vaishnavi-c12488/ComplyAgent.git
 cd ComplyAgent
 ```
 
-### 2. Create a virtual environment
+### 2. Create a Virtual Environment
 
 **Windows (PowerShell):**
 
@@ -181,7 +264,7 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Install dependencies
+### 3. Install Dependencies
 
 ```bash
 python -m pip install -r requirements.txt
@@ -189,20 +272,23 @@ python -m pip install -r requirements.txt
 
 ### 4. Configure Tesseract OCR
 
-Install Tesseract and make sure it is available on your system `PATH`. If needed, set the `TESSERACT_CMD` environment variable to the full path of the Tesseract executable.
+Install Tesseract and ensure its executable is available through your system `PATH`. If required, configure the `TESSERACT_CMD` environment variable to point to the executable.
 
-### 5. Run the FastAPI application
+### 5. Start the FastAPI Backend
 
 ```bash
 python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
 ```
 
+Open the following local endpoints:
+
 | Resource | URL |
 |---|---|
-| API documentation | http://127.0.0.1:8000/docs |
-| Health endpoint | http://127.0.0.1:8000/health |
+| API root | http://127.0.0.1:8000/ |
+| Interactive API documentation | http://127.0.0.1:8000/docs |
+| Health check | http://127.0.0.1:8000/health |
 
-### 6. Run the Streamlit dashboard
+### 6. Start the Streamlit Dashboard
 
 Open a second terminal, activate the virtual environment, and run:
 
@@ -210,9 +296,9 @@ Open a second terminal, activate the virtual environment, and run:
 python -m streamlit run console/streamlit_reviewer.py
 ```
 
-Then open the local URL shown in the terminal.
+Open the local dashboard URL printed in the terminal.
 
-> **Note:** The application requires its expected synthetic-data files. Database-backed functionality also requires PostgreSQL configuration and a valid database connection.
+> **Note:** Local execution requires the expected project data files. Database-backed functionality also requires the appropriate PostgreSQL configuration and connection.
 
 ---
 
@@ -230,15 +316,17 @@ Run the API container:
 docker run --rm -p 8000:8000 complyagent
 ```
 
-Open the API documentation at http://localhost:8000/docs.
+Open the API documentation at:
 
-> The current Dockerfile starts the **FastAPI service only**. A complete deployment also needs the required data files, environment variables, database configuration, and a separately configured Streamlit service.
+http://localhost:8000/docs
+
+The current Dockerfile starts the FastAPI service. The Streamlit dashboard is deployed separately, and database-backed functionality requires its own configuration.
 
 ---
 
 ## 📊 Model Evaluation
 
-Results from the current evaluation on **synthetic data**:
+The current recorded evaluation on synthetic data reports the following metrics:
 
 | Metric | Result |
 |---|---:|
@@ -247,27 +335,28 @@ Results from the current evaluation on **synthetic data**:
 | Recall | 85.56% |
 | F1-score | 88.36% |
 
-> These metrics reflect synthetic-data evaluation only. They do not establish performance on real customer documents, financial transactions, or operational compliance cases.
+These results describe the recorded synthetic-data evaluation only. They do not establish performance on real customer documents, financial transactions, or operational compliance cases.
 
 ---
 
 ## 🧪 Testing
 
-Run the automated test suite:
+Run the automated tests from the project root:
 
 ```bash
 python -m pytest tests/ -v
 ```
 
-The latest recorded run completed with **8 passing tests**.
+The latest recorded test run completed with **8 passing tests**. Results may differ as the project and test suite evolve.
 
 ---
 
 ## 🔐 Data Privacy and Responsible Use
 
-- This project is intended for educational and portfolio purposes.
-- Synthetic customer identities are generated, and document images come from the MIDV-500 benchmark.
-- The mapping between a synthetic identity and a benchmark document is a deterministic linkage for testing. It does **not** claim the document belongs to that identity.
+- ComplyAgent is an educational and portfolio project.
+- Synthetic customer identities are generated for testing.
+- Document images are sourced from the MIDV-500 benchmark.
+- Linking a synthetic identity to a benchmark document is a testing arrangement and does not establish that the document belongs to that identity.
 - The large MIDV-500 source dataset is excluded from the Git repository.
 - Never commit API keys, credentials, real identity documents, or sensitive customer records.
 
@@ -275,19 +364,21 @@ The latest recorded run completed with **8 passing tests**.
 
 ## ⚠️ Limitations
 
-- ELA results indicate **potential** image manipulation. They are not proof of forgery.
-- OCR errors and model predictions may be incorrect.
-- Sanctions screening can produce false positives or miss relevant matches.
-- Real-world use would require security hardening, validation, data governance, human oversight, and regulatory review.
+- ELA identifies potential image-manipulation indicators; it does not prove forgery.
+- OCR may extract incorrect or incomplete text.
+- Machine-learning predictions and rules may produce incorrect risk classifications.
+- Sanctions screening can generate false positives or miss relevant matches.
+- Evaluation metrics are based on synthetic data and should not be generalized to real-world performance.
+- Production use would require extensive validation, security hardening, data governance, human oversight, and regulatory review.
 
 ---
 
 ## 🔮 Future Improvements
 
-- Deploy the API and dashboard as separate services.
+- Improve deployment reliability and production readiness.
 - Configure managed PostgreSQL for persistent audit records.
-- Improve low-confidence OCR handling and uncertain document-quality assessments.
-- Expand automated tests and evaluation.
+- Improve low-confidence OCR handling and document-quality assessment.
+- Expand automated tests and model evaluation.
 - Add monitoring, structured error reporting, and secure configuration management.
 - Evaluate on appropriately authorized, representative datasets.
 
@@ -295,6 +386,8 @@ The latest recorded run completed with **8 passing tests**.
 
 ## 👩‍💻 Author
 
-Developed as a Data Science and AI portfolio project exploring compliance automation, machine learning, computer vision, workflow orchestration, and deployment practices.
+Developed as a Data Science and AI portfolio project exploring compliance automation, machine learning, computer vision, workflow orchestration, and cloud deployment.
 
-**Vaishnavi Chavan** · [GitHub](https://github.com/vaishnavi-c12488) · [LinkedIn](https://www.linkedin.com/in/vaishnavi-chavan-99718b31a)
+**Vaishnavi Chavan**
+
+[GitHub](https://github.com/vaishnavi-c12488) · [LinkedIn](https://www.linkedin.com/in/vaishnavi-chavan-99718b31a)
