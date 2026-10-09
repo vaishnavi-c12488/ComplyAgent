@@ -1,5 +1,3 @@
-<div align="center">
-
 # 🛡️ ComplyAgent
 
 ### AI-Powered KYC & AML Compliance Intelligence
@@ -15,8 +13,6 @@ A multi-agent compliance review system that combines document intelligence, sanc
 ![Docker](https://img.shields.io/badge/Docker-API%20Image-2496ED?logo=docker&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen)
 
-</div>
-
 > **Project status:** Educational and portfolio project built on synthetic data. It is not intended for real-world financial compliance decisions.
 
 ---
@@ -29,6 +25,7 @@ A multi-agent compliance review system that combines document intelligence, sanc
 - [Architecture](#-architecture)
 - [Workflow](#-workflow)
 - [Technology Stack](#-technology-stack)
+- [Dataset](#-dataset)
 - [Project Structure](#-project-structure)
 - [Installation and Setup](#-installation-and-setup)
 - [Docker](#-docker)
@@ -53,18 +50,18 @@ The system is designed to support human review, not replace compliance professio
 
 ## 🚀 Key Features
 
-| Capability | Description |
-|---|---|
-| **Document Verification** | Processes uploaded identity documents in supported image formats. |
-| **OCR Extraction** | Extracts text and confidence scores using Tesseract OCR. |
-| **Tamper Detection** | Uses Error Level Analysis (ELA) to flag potential image manipulation. |
-| **Sanctions Screening** | Screens identities against configured sanctions data and evaluates potential matches. |
-| **Risk Assessment** | Combines machine-learning risk scoring with a deterministic rules engine. |
-| **Transaction Analysis** | Evaluates suspicious transaction patterns and risk indicators. |
-| **Multi-Agent Workflow** | Coordinates document, screening, risk, and decision agents using LangGraph. |
-| **REST API** | Exposes compliance functionality through FastAPI. |
-| **Reviewer Dashboard** | Provides a Streamlit interface for reviewing cases and results. |
-| **Audit Logging** | Records decision evidence and trace information for auditability. |
+| Capability                | Description                                                                           |
+| ------------------------- | ------------------------------------------------------------------------------------- |
+| **Document Verification** | Processes uploaded identity documents in supported image formats.                     |
+| **OCR Extraction**        | Extracts text and confidence scores using Tesseract OCR.                              |
+| **Tamper Detection**      | Uses Error Level Analysis (ELA) to flag potential image manipulation.                 |
+| **Sanctions Screening**   | Screens identities against configured sanctions data and evaluates potential matches. |
+| **Risk Assessment**       | Combines machine-learning risk scoring with a deterministic rules engine.             |
+| **Transaction Analysis**  | Evaluates suspicious transaction patterns and risk indicators.                        |
+| **Multi-Agent Workflow**  | Coordinates document, screening, risk, and decision agents using LangGraph.           |
+| **REST API**              | Exposes compliance functionality through FastAPI.                                     |
+| **Reviewer Dashboard**    | Provides a Streamlit interface for reviewing cases and results.                       |
+| **Audit Logging**         | Records decision evidence and trace information for auditability.                     |
 
 ---
 
@@ -72,12 +69,12 @@ The system is designed to support human review, not replace compliance professio
 
 ComplyAgent is deployed on **Render** using separate services for the FastAPI backend and Streamlit reviewer dashboard.
 
-| Component | Link |
-|---|---|
-| **Live Reviewer Dashboard** | [Open ComplyAgent Dashboard](https://complyagent-dashboard.onrender.com) |
-| **API Base URL** | [ComplyAgent API](https://complyagent-w8hs.onrender.com) |
-| **Interactive API Documentation** | [Swagger UI](https://complyagent-w8hs.onrender.com/docs) |
-| **API Health Check** | [Check API Health](https://complyagent-w8hs.onrender.com/health) |
+| Component                         | Link                                                                     |
+| --------------------------------- | ------------------------------------------------------------------------ |
+| **Live Reviewer Dashboard**       | [Open ComplyAgent Dashboard](https://complyagent-dashboard.onrender.com) |
+| **API Base URL**                  | [ComplyAgent API](https://complyagent-w8hs.onrender.com)                 |
+| **Interactive API Documentation** | [Swagger UI](https://complyagent-w8hs.onrender.com/docs)                 |
+| **API Health Check**              | [Check API Health](https://complyagent-w8hs.onrender.com/health)         |
 
 ### Deployment Details
 
@@ -90,7 +87,7 @@ ComplyAgent is deployed on **Render** using separate services for the FastAPI ba
 
 The dashboard provides the user interface, while the API processes requests and returns compliance analysis results.
 
-> **Note:** Free hosting services may take time to start after inactivity. The deployed application is an educational prototype using synthetic data.
+> **Note:** Free hosting services may take time to start after inactivity. The first request can take up to a minute while the services wake up. The deployed application is an educational prototype using synthetic data.
 
 ---
 
@@ -183,32 +180,47 @@ The API returns the analysis results, and the reviewer dashboard presents the av
 
 ## 🛠️ Technology Stack
 
-| Technology | Purpose |
-|---|---|
-| **Python 3.11** | Core programming language |
-| **FastAPI** | REST API and backend services |
-| **Streamlit** | Interactive reviewer dashboard |
-| **LangGraph** | Multi-agent workflow orchestration |
-| **Pydantic** | Data validation and structured agent contracts |
-| **Scikit-learn** | Machine-learning risk scoring |
-| **OpenCV** | Image processing and ELA preparation |
-| **Pillow** | Image handling |
-| **Tesseract OCR** | Text extraction from identity documents |
-| **Pandas** | Data loading, transformation, and analysis |
-| **NumPy** | Numerical computation |
-| **PostgreSQL** | Relational database and audit storage integration |
-| **JSONL** | Structured audit-trace logging |
-| **MCP** | Tool integration |
-| **Docker** | Containerization and deployment |
-| **Pytest** | Automated testing |
-| **Render** | Cloud hosting for the API and dashboard |
-| **Git & GitHub** | Version control and source-code hosting |
+| Technology        | Purpose                                                    |
+| ----------------- | ---------------------------------------------------------- |
+| **Python 3.11**   | Core programming language                                  |
+| **FastAPI**       | REST API and backend services                              |
+| **Streamlit**     | Interactive reviewer dashboard                             |
+| **LangGraph**     | Multi-agent workflow orchestration                         |
+| **Pydantic**      | Data validation and structured agent contracts             |
+| **Scikit-learn**  | Machine-learning risk scoring                              |
+| **OpenCV**        | Image processing and ELA preparation                       |
+| **Pillow**        | Image handling                                             |
+| **Tesseract OCR** | Text extraction from identity documents                    |
+| **Pandas**        | Data loading, transformation, and analysis                 |
+| **NumPy**         | Numerical computation                                      |
+| **PostgreSQL**    | Relational database and audit storage integration          |
+| **JSONL**         | Structured audit-trace logging                             |
+| **MCP**           | Model Context Protocol server exposing tools (`mcp_server/`) |
+| **Docker**        | Containerization and deployment                            |
+| **Pytest**        | Automated testing                                          |
+| **Render**        | Cloud hosting for the API and dashboard                    |
+| **Git & GitHub**  | Version control and source-code hosting                    |
+
+<!-- TODO: after checking mcp_server/, add one line here listing the actual MCP tool names and what each does. -->
+
+---
+
+## 📦 Dataset
+
+| Detail                              | Value                                                           |
+| ----------------------------------- | --------------------------------------------------------------- |
+| Document source                     | MIDV-500 benchmark (13.45 GB download, excluded from this repo) |
+| Valid document image–metadata pairs | 4,200                                                           |
+| Document types                      | 14 (300 images each)                                            |
+| Synthetic identity records          | 100 (generated separately from MIDV-500)                        |
+
+The 100 synthetic identities are linked to benchmark documents only as a testing arrangement. They do not represent real people.
 
 ---
 
 ## 📁 Project Structure
 
-```text
+```
 ComplyAgent/
 ├── agents/                 # Document, screening, risk, and decision agents
 ├── api/                    # FastAPI application and endpoints
@@ -282,11 +294,11 @@ python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
 
 Open the following local endpoints:
 
-| Resource | URL |
-|---|---|
-| API root | http://127.0.0.1:8000/ |
-| Interactive API documentation | http://127.0.0.1:8000/docs |
-| Health check | http://127.0.0.1:8000/health |
+| Resource                      | URL                            |
+| ----------------------------- | ------------------------------ |
+| API root                      | <http://127.0.0.1:8000/>       |
+| Interactive API documentation | <http://127.0.0.1:8000/docs>   |
+| Health check                  | <http://127.0.0.1:8000/health> |
 
 ### 6. Start the Streamlit Dashboard
 
@@ -316,9 +328,7 @@ Run the API container:
 docker run --rm -p 8000:8000 complyagent
 ```
 
-Open the API documentation at:
-
-http://localhost:8000/docs
+Open the API documentation at <http://localhost:8000/docs>.
 
 The current Dockerfile starts the FastAPI service. The Streamlit dashboard is deployed separately, and database-backed functionality requires its own configuration.
 
@@ -328,12 +338,14 @@ The current Dockerfile starts the FastAPI service. The Streamlit dashboard is de
 
 The current recorded evaluation on synthetic data reports the following metrics:
 
-| Metric | Result |
-|---|---:|
-| Accuracy | 93.60% |
+| Metric    | Result |
+| --------- | ------ |
+| Accuracy  | 93.60% |
 | Precision | 91.35% |
-| Recall | 85.56% |
-| F1-score | 88.36% |
+| Recall    | 85.56% |
+| F1-score  | 88.36% |
+
+Recall is lower than precision, which means the model misses some risky cases. In a compliance setting, missed cases cost more than false alarms, so a production system would tune the decision threshold toward higher recall.
 
 These results describe the recorded synthetic-data evaluation only. They do not establish performance on real customer documents, financial transactions, or operational compliance cases.
 
@@ -365,6 +377,7 @@ The latest recorded test run completed with **8 passing tests**. Results may dif
 ## ⚠️ Limitations
 
 - ELA identifies potential image-manipulation indicators; it does not prove forgery.
+- Tamper-detection performance has not been benchmarked on labeled forged documents.
 - OCR may extract incorrect or incomplete text.
 - Machine-learning predictions and rules may produce incorrect risk classifications.
 - Sanctions screening can generate false positives or miss relevant matches.
@@ -375,10 +388,12 @@ The latest recorded test run completed with **8 passing tests**. Results may dif
 
 ## 🔮 Future Improvements
 
+- Add a baseline comparison (rules only vs rules + ML) and a confusion matrix.
+- Evaluate ELA tamper detection on a labeled set of altered documents.
 - Improve deployment reliability and production readiness.
 - Configure managed PostgreSQL for persistent audit records.
 - Improve low-confidence OCR handling and document-quality assessment.
-- Expand automated tests and model evaluation.
+- Expand automated tests, including per-agent tests and CI.
 - Add monitoring, structured error reporting, and secure configuration management.
 - Evaluate on appropriately authorized, representative datasets.
 
